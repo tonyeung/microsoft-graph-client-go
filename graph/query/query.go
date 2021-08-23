@@ -87,6 +87,15 @@ func Skip(items int) QueryOption {
 	}
 }
 
+func SkipToken(token string) QueryOption {
+	return func(u url.URL) url.URL {
+		queryString, _ := url.ParseQuery(u.RawQuery)
+		queryString.Add("$skiptoken", token)
+		u.RawQuery = queryString.Encode()
+		return u
+	}
+}
+
 func Top(count int) QueryOption {
 	return func(u url.URL) url.URL {
 		queryString, _ := url.ParseQuery(u.RawQuery)

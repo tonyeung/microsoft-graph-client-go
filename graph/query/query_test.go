@@ -134,6 +134,20 @@ func TestSkip(t *testing.T) {
 	}
 }
 
+func TestSkipToken(t *testing.T) {
+	u := url.URL{
+		Scheme: "https",
+		Host:   "google.com",
+	}
+	q := query.SkipToken("token")
+	u = q(u)
+
+	if u.String() != "https://google.com?%24skiptoken=token" {
+		t.Error("TestTop failed, expected https://google.com?%24skiptoken=token, got:" + u.String())
+		return
+	}
+}
+
 func TestTop(t *testing.T) {
 	u := url.URL{
 		Scheme: "https",
