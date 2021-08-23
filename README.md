@@ -14,3 +14,8 @@ filling out the query options and testing it with client secret credentials. All
 v1 should support all of the above, in addition to the various authentication options available in MSAL (which itself is still alpha)
 
 v2 should start filling in the various data structures for QOL. 
+
+## notes on creating new releases
+
+* before pushing changes to origin, create a new tag, ex: `v0.1.1`
+* hit `https://sum.golang.org/lookup/github.com/tonyeung/microsoft-graph-client-go@v0.1.1`
