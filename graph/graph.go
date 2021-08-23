@@ -2,7 +2,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -58,7 +57,7 @@ func (g Client) get(url string) (string, error) {
 		}
 	}
 	bearer := "Bearer " + authResult.AccessToken
-	fmt.Print(bearer)
+	//fmt.Print(bearer)
 
 	request, _ := http.NewRequest(http.MethodGet, url, nil)
 	request.Header.Add("Authorization", bearer)
