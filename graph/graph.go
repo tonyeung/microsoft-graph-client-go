@@ -2,6 +2,7 @@ package graph
 
 import (
 	"context"
+	"errors"
 	"io"
 	"log"
 	"net/http"
@@ -33,7 +34,7 @@ func New(app confidential.Client, httpClient HttpDoer) (*Client, error) {
 	}, nil
 }
 
-func (g Client) Api(resource string, opts ...query.QueryOption) (string, error) {
+func (g Client) Api(resource string, method string, opts ...query.QueryOption) (string, error) {
 	url := url.URL{
 		Scheme: "https",
 		Host:   g.graphHost,
@@ -44,7 +45,14 @@ func (g Client) Api(resource string, opts ...query.QueryOption) (string, error) 
 		url = opt(url)
 	}
 
-	return g.get(url.String())
+	switch method {
+	case "GET":
+		return g.get(url.String())
+	case "DELETE":
+		return g.delete(url.String())
+	default:
+		return "", errors.New("invalid method")
+	}
 }
 
 func (g Client) get(url string) (string, error) {
@@ -60,6 +68,33 @@ func (g Client) get(url string) (string, error) {
 	//fmt.Print(bearer)
 
 	request, _ := http.NewRequest(http.MethodGet, url, nil)
+	request.Header.Add("Authorization", bearer)
+
+	response, _ := g.graphClient.Do(request)
+
+	defer response.Body.Close()
+
+	b, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	return string(b), nil
+}
+
+func (g Client) delete(url string) (string, error) {
+
+	authResult, err := g.msal.AcquireTokenSilent(context.Background(), g.scopes)
+	if err != nil {
+		authResult, err = g.msal.AcquireTokenByCredential(context.Background(), g.scopes)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	bearer := "Bearer " + authResult.AccessToken
+	//fmt.Print(bearer)
+
+	request, _ := http.NewRequest(http.MethodDelete, url, nil)
 	request.Header.Add("Authorization", bearer)
 
 	response, _ := g.graphClient.Do(request)

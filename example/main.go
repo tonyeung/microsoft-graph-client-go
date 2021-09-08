@@ -27,7 +27,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	result, err := client.Api("/users",
+	result, err := client.Api("/users", "GET",
 		query.Version("beta"),
 		query.Top(1),
 	)
