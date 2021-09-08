@@ -18,4 +18,5 @@ v2 should start filling in the various data structures for QOL.
 ## notes on creating new releases
 
 * before pushing changes to origin, create a new tag, ex: `v0.1.1`
+* VSCODE: > Git: Push (Follow Tags)
 * hit `https://sum.golang.org/lookup/github.com/tonyeung/microsoft-graph-client-go@v0.1.1`
